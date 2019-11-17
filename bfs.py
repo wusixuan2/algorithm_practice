@@ -81,45 +81,6 @@ source = [2, 0]
 destination = [2, 2]
 # print(shortestPath(grid2, source, destination))
 
-################ graph find route ################
-graph1 = {
-          0: [1, 2, 3],
-          1: [4],
-          2: [4, 5],
-          3: [4,5],
-          4: [],
-          5: [6],
-          6:[]
-          }
-
-def find_route(graph, orig, dest, visited):
-  if orig == dest: return [orig]
-
-  nbrs = find_neigbor(orig, graph)
-  visited.append(orig)
-  route = dfs(graph, nbrs, dest, visited)
-
-  if not route: return False
-
-  route.insert(0, orig)
-  return route
-
-def dfs(graph, nbrs, dest, visited):
-  if not nbrs: return False
-  if nbrs[0] in visited:
-    return dfs(graph, nbrs[1:], dest, visited)
-  route = find_route(graph, nbrs[0], dest, visited)
-  if not route:
-    return dfs(graph, nbrs[1:], dest, visited)
-  else:
-    return route
-
-def find_neigbor(node, graph):
-  if node not in graph:
-    return False
-  return graph[node]
-
-# print(find_route(graph1, 0, 6, []))
 ################ Sequence Reconstruction ################
 class Solution:
     def sequenceReconstruction(self, org, seqs):
@@ -298,7 +259,6 @@ class Solution:
                     q.append(neighbor)
         return result
 ################ word ladder ################
-import collections
 class Solution:
     """
     @param: start: a string
@@ -307,6 +267,34 @@ class Solution:
     @return: An integer
     """
     def ladderLength(self, start, end, dict):
+        dict.append(end)
+        queue = deque([start])
+        level = 0
+        wordSet = set(dict)
+
+        while queue:
+            print(queue)
+            for i in range(len(queue)):
+                cur = queue.popleft()
+                wordUnit = list(cur)
+
+                if cur == end: return level+1
+
+                for j in range(len(cur)):
+                    temp = wordUnit[j]
+
+                    for code in range(ord('a'), ord('z') + 1):
+                        wordUnit[j] = chr(code)
+                        newStr = ''.join(wordUnit)
+                        if newStr in wordSet:
+                            queue.append(newStr)
+                            wordSet.remove(newStr)
+                    wordUnit[j] = temp
+            level += 1
+
+        return 0
+
+    def ladderLength2(self, start, end, dict):
         dict.append(end)
         queue = collections.deque([start])
         visited = set([start])
@@ -346,6 +334,7 @@ dict =["a","b","c"]
 start ="hit"
 end = "cog"
 dict =["hot","dot","dog","lot","log"]
+# "hit"->"hot"->"dot"->"dog"->"cog"
 print(sol.ladderLength(start, end, dict))
 
 
