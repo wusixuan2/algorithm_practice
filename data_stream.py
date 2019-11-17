@@ -25,6 +25,8 @@ def cmp_words(a, b):
     if a[1] != b[1]:
         return b[1] - a[1]
     return cmp(a[0], b[0])
+def cmp(a, b):
+    return (a > b) - (a < b)
 
 class HashHeap:
     def __init__(self):
@@ -60,10 +62,10 @@ class HashHeap:
 
     def _siftup(self, index):
         while index != 1:
-            if cmp_words(self.heap[index], self.heap[index / 2]) < 0:
+            if cmp_words(self.heap[index], self.heap[index // 2]) < 0:
                 break
-            self._swap(index, index / 2)
-            index = index / 2
+            self._swap(index, index // 2)
+            index = index // 2
         return index
 
     def _siftdown(self, index):
@@ -88,7 +90,6 @@ class HashHeap:
         self.remove(key)
         return value
 
-
 class TopK:
 
     # @param {int} k an integer
@@ -100,7 +101,6 @@ class TopK:
 
     # @param {str} word a string
     def add(self, word):
-        # Write your code here
         if word not in self.counts:
             self.counts[word] = 1
         else:
@@ -114,10 +114,8 @@ class TopK:
         if self.top_k.size() > self.k:
             self.top_k.pop()
 
-
     # @return {str[]} the current top k frequent word
     def topk(self):
-        # Write your code here
         topk = self.top_k.heap[1:]
         topk.sort(cmp=cmp_words)
         return [ele[0] for ele in topk]
@@ -135,7 +133,6 @@ class Entry:
         if self.freq == other.freq:
             return self.word > other.word
         return self.freq < other.freq
-
 
 from bisect import bisect_left
 from collections import deque
@@ -211,7 +208,6 @@ class Solution:
             medians.append(self.median)
         return medians
 
-    @property
     def median(self):
         return -self.maxheap[0]
 
