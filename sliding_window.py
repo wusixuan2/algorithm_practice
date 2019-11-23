@@ -39,7 +39,6 @@ class HashHeap:
         self.heap = []
         self.desc = desc
 
-    @property
     def size(self):
         return len(self.heap)
 

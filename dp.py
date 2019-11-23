@@ -88,7 +88,6 @@ class Solution:
       for i in range(n):
           for j in range(m, A[i]-1, -1):
             f[j] = max(f[j], f[j-A[i]] + V[i])
-          print(f)
       return f[m]
 
   def uniquePaths(self, m, n):
@@ -223,7 +222,6 @@ class Solution:
     :type nums: List[int]
     :rtype: List[int]
     """
-    # write your code here
     if len(nums) < 2:
         return nums
     # record the index of the previous divisible number

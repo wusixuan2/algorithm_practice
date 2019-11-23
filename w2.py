@@ -204,8 +204,6 @@ seen = set()
 
 
 ############################## Binary tree level order traversal ##############################
-from collections import deque
-
 class Solution1:
     def levelOrder(self, root):
         if root is None:
@@ -230,9 +228,6 @@ class Solution1:
 
 
 ############################################################
-
-
-
 from collections import deque
 
 
@@ -241,7 +236,6 @@ class Solution:
     # @param {int[][]} prerequisites a list of prerequisite pairs
     # @return {boolean} true if can finish all courses or false
     def canFinish(self, numCourses, prerequisites):
-        # Write your code here
         edges = {i: [] for i in range(numCourses)}
         degrees = [0 for i in range(numCourses)]
         for i, j in prerequisites:

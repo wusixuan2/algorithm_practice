@@ -126,7 +126,6 @@ class Solution:
     @return: a double whose format is *.5 or *.0
     """
     def findMedianSortedArrays1(self, A, B):
-        # write your code here
         len_a, len_b = len(A), len(B)
         if (len_a + len_b) % 2 == 1:
             return self.finf_kth(A, B, (len_a + len_b) // 2 + 1)
