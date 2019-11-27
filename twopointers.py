@@ -158,3 +158,54 @@ class Solution:
         self.sort(colors, color_from, color, index_from, right)
         self.sort(colors, color + 1, color_to, left, index_to)
 
+    """
+    @param nums: The integer array you should partition
+    @param k: As description
+    @return: The index after partition
+    """
+    def partitionArray(self, nums, k):
+        left, right = 0, len(nums) - 1
+        while left <= right:
+            while left <= right and nums[left] < k:
+                left += 1
+            while left <= right and nums[right] >= k:
+                right -= 1
+            if left <= right:
+                nums[left], nums[right] = nums[right], nums[left]
+                left += 1
+                right -= 1
+        return left
+
+    # @param k & A a integer and an array
+    # @return ans a integer
+    def kthLargestElement(self, k, A):
+        if not A or k < 1 or k > len(A):
+            return None
+        return self.partition(A, 0, len(A) - 1, len(A) - k)
+
+    def partition(self, nums, start, end, k):
+        """
+        During the process, it's guaranteed start <= k <= end
+        """
+        if start == end:
+            return nums[k]
+
+        left, right = start, end
+        pivot = nums[(start + end) // 2]
+        while left <= right:
+            while left <= right and nums[left] < pivot:
+                left += 1
+            while left <= right and nums[right] > pivot:
+                right -= 1
+            if left <= right:
+                nums[left], nums[right] = nums[right], nums[left]
+                left, right = left + 1, right - 1
+
+        # left is not bigger than right
+        if k <= right:
+            return self.partition(nums, start, right, k)
+        if k >= left:
+            return self.partition(nums, left, end, k)
+
+        return nums[k]
+
