@@ -156,3 +156,40 @@ class Solution:
 
     def getDistance(self, a, b):
         return (a.x - b.x) ** 2 + (a.y - b.y) ** 2
+
+########################## find the nth number that only have prime factors 2, 3 and 5.##########################
+import heapq
+
+class Solution:
+    """
+    @param {int} n an integer.
+    @return {int} the nth prime number as description.
+    """
+    def nthUglyNumber(self, n):
+        heap = [1]
+        visited = set([1])
+
+        val = None
+        for i in range(n):
+            val = heapq.heappop(heap)
+            for factor in [2, 3, 5]:
+                if val * factor not in visited:
+                    visited.add(val * factor)
+                    heapq.heappush(heap, val * factor)
+
+        return val
+
+from heapq import heappush, heappop
+class Solution:
+
+    def nthUglyNumber(self, n):
+
+        h = [(1,1)]
+
+        for _ in range(n):
+
+            num, m = heappop(h)
+            for f in [2, 3, 5]:
+                if f >= m:
+                    heappush(h, (f*num, f))
+        return num
