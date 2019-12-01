@@ -193,3 +193,46 @@ class Solution:
                 if f >= m:
                     heappush(h, (f*num, f))
         return num
+
+########################## Insert Delete GetRandom O(1) ##########################
+# note: dict中使用in是O(1)，len不是，可以用一个变量记录每次列表变动时列表的长度（或末位下标）
+import random
+
+class RandomizedSet(object):
+
+    def __init__(self):
+        # do initialize if necessary
+        self.nums, self.pos = [], {}
+
+    # @param {int} val Inserts a value to the set
+    # Returns {bool} true if the set did not already contain the specified element or false
+    def insert(self, val):
+        if val in self.pos:
+            return False
+
+        self.nums.append(val)
+        self.pos[val] = len(self.nums) - 1
+        return True
+
+    # @param {int} val Removes a value from the set
+    # Return {bool} true if the set contained the specified element or false
+    def remove(self, val):
+        if val not in self.pos:
+            return False
+
+        idx, last = self.pos[val], self.nums[-1]
+        self.nums[idx], self.pos[last] = last, idx
+        self.nums.pop()
+        del self.pos[val]
+        return True
+
+    # return {int} a random number from the set
+    def getRandom(self):
+        return self.nums[random.randint(0, len(self.nums) - 1)]
+
+
+# Your RandomizedSet object will be instantiated and called as such:
+# obj = RandomizedSet()
+# param = obj.insert(val)
+# param = obj.remove(val)
+# param = obj.getRandom()
