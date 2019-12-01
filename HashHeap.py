@@ -179,9 +179,14 @@ class Solution:
 
         return val
 
+# 不用set去重
+# 可以把质因子从小到大排列，比如，60 = 2 * 2 * 3 * 5，我们可以在代码里定一个规则，既堆里只接受质因子升序相乘的数。例如，60 是 12 * 5
+# 加入堆的，而不是20 * 3。
+# 数学上，质因子有序排列是有唯一性的，升序排列可以保证一个重复数总是第一时间被生成，这俩个引理可以证明算法的正确性。
+# 实现上，因为质因子是升序排列，只要记住最后一个质因子就可以了(有点像单调栈)，所以堆里就放ugly number 和生成它的最后一个质因子，这个
+# ugly number以后只能和不小于最后一个质因子的质数相乘生成更大的ugly number。
 from heapq import heappush, heappop
 class Solution:
-
     def nthUglyNumber(self, n):
 
         h = [(1,1)]
