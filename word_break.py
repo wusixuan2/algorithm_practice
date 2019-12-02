@@ -66,7 +66,32 @@ class Solution:
 
         return False
 
+    # return the number of sentences you can form
+    # f[i] 代表子串 s[:i-1] 能被分割成多少个句子
+    def wordBreak3(self, s, dict):
+        if len(s) == 0 or len(dict) == 0:
+            return 0
+
+        dict_lower = set()
+        for word in dict:
+            dict_lower.add(word.lower())
+
+        n = len(s)
+        max_len = max([len(word) for word in dict])
+
+        # define f[i]: number of sentences that s[:i - 1] can be breaked into using words in dic
+        f = [0 for _ in range(n + 1)]
+
+        # init
+        f[0] = 1
+
+        for i in range(1, n + 1):
+            for j in range(0, i):
+                if s[j:i].lower() in dict_lower:
+                    f[i] += f[j]
+        return f[-1]
+
 sol = Solution()
-print(sol.wordBreakBFS("lintcode",["lint", "code"]))
-print(sol.wordBreakBFS("a",["b"]))
-print(sol.wordBreakBFS("aaaaaaa", ["aaaa","aaa"]))
+print(sol.wordBreak3("lintcode",["lint", "code"]))
+print(sol.wordBreak3("a",["b"]))
+print(sol.wordBreak3("aaaaaaa", ["aaaa","aaa"]))
