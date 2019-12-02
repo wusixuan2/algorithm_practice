@@ -36,7 +36,37 @@ class Solution:
                     break
         return dp[n]
 
+    # BFS
+    def wordBreakBFS(self, s, dict):
+        if len(dict) == 0:
+            return len(s) == 0
+
+        n = len(s)
+        maxLength = max([len(w) for w in dict])
+
+        # BFS
+        from collections import deque
+        q = deque()
+        hash = set()
+
+        q.append(0)
+        hash.add(0)
+
+        while q:
+            start = q.pop()
+            for end in range(start + 1, min(start + maxLength, n) + 1):
+                if end in hash:
+                    continue
+
+                if s[start:end] in dict:
+                    if end == n:
+                        return True
+                    q.append(end)
+                    hash.add(end)
+
+        return False
+
 sol = Solution()
-print(sol.wordBreak("lintcode",["lint", "code"]))
-print(sol.wordBreak("a",["b"]))
-print(sol.wordBreak("aaaaaaa", ["aaaa","aaa"]))
+print(sol.wordBreakBFS("lintcode",["lint", "code"]))
+print(sol.wordBreakBFS("a",["b"]))
+print(sol.wordBreakBFS("aaaaaaa", ["aaaa","aaa"]))
