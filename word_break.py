@@ -91,7 +91,42 @@ class Solution:
                     f[i] += f[j]
         return f[-1]
 
+    # 记忆化搜索剪枝
+    # 利用memo[s]记录字符串s的切分方案，每次不断递归，枚举i为s的切割点进行搜索，一旦memo[s]存在，返回即可
+    """
+    @param: s: A string
+    @param: wordDict: A set of words.
+    @return: All possible sentences.
+    """
+    def wordBreakII(self, s, word_dict):
+        return self.dfs(s, word_dict, {})
+
+    # 找到 s 的所有切割方案并 return
+    def dfs(self, s, word_dict, memo):
+        if s in memo: return memo[s]
+        if not s: return []
+
+        partitions = []
+
+        # 取整个字符串s
+        if s in word_dict:
+            partitions.append(s)
+
+        # 取字符串s的前缀子串作为word，word长度为1到len(s) - 1
+        for i in range(1, len(s)):
+            prefix = s[:i]
+
+            if prefix not in word_dict:
+                continue
+
+            sub_partitions = self.dfs(s[i:], word_dict, memo)
+            for sub_partition in sub_partitions:
+                partitions.append(prefix + " " + sub_partition)
+
+        memo[s] = partitions
+        return partitions
+
 sol = Solution()
-print(sol.wordBreak3("lintcode",["lint", "code"]))
-print(sol.wordBreak3("a",["b"]))
-print(sol.wordBreak3("aaaaaaa", ["aaaa","aaa"]))
+print(sol.wordBreakII("lintcode",["lint", "code"]))
+print(sol.wordBreakII("a",["b"]))
+print(sol.wordBreakII("aaaaaaa", ["aaaa","aaa"]))
