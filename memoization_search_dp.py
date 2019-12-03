@@ -181,3 +181,31 @@ class Solution:
 
 
         return f[n][m]
+
+# Function to get minimum number of trials
+# needed in worst case with n eggs and k floors
+# K: number of egg, N: number of floor
+def superEggDrop(K: int, N: int):
+
+    memo = dict()
+    def dp(K, N) -> int:
+        # base case
+        if K == 1: return N
+        if N == 0: return 0
+        # 避免重复计算
+        if (K, N) in memo:
+            return memo[(K, N)]
+
+        res = float('INF')
+        # 穷举所有可能的选择
+        for i in range(1, N + 1):
+            res = min(res,
+                      max(
+                            dp(K, N - i), # 碎
+                            dp(K - 1, i - 1) # 没碎
+                         ) + 1 # 在第 i 楼扔了一次
+                  )
+        # 记入备忘录
+        memo[(K, N)] = res
+        return res
+    return dp(K, N)
