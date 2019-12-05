@@ -37,3 +37,42 @@ class Solution:
             slice = max(slice, sum)
             sum = max(0, sum)
         return slice
+
+    # find two non-overlapping subarrays which have the largest sum
+    # left[i] 代表从最左边到 i 位置所能取得的最大 subarray sum;
+    # right[i] 代表从最右边到 i 位置所能取得的最大 subarray sum;
+    """
+    @param: nums: A list of integers
+    @return: An integer denotes the sum of max two non-overlapping subarrays
+    """
+    def maxTwoSubArrays(self, nums):
+        if not nums:
+            return 0
+
+        n = len(nums)
+        left = [0] * n
+        right = [0] * n
+
+        left[0] = nums[0]
+        max_so_far = nums[0]
+        max_ending_here = nums[0]
+        for i in range(1, n):
+            max_ending_here = max(nums[i], nums[i] + max_ending_here)
+            max_so_far = max(max_so_far, max_ending_here)
+
+            left[i] = max_so_far
+
+
+        right[n - 1] = nums[n - 1]
+        max_so_far = nums[n - 1]
+        max_ending_here = nums[n - 1]
+        for i in range(n - 2, -1, -1):
+            max_ending_here = max(nums[i], nums[i] + max_ending_here)
+            max_so_far = max(max_so_far, max_ending_here)
+
+            right[i] = max_so_far
+
+        res = -sys.maxint - 1
+        for i in range(n - 1):
+            res = max(res, left[i] + right[i + 1])
+        return res
