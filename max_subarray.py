@@ -76,3 +76,47 @@ class Solution:
         for i in range(n - 1):
             res = max(res, left[i] + right[i + 1])
         return res
+
+    # Given an array of integers and a number k, find k non-overlapping subarrays which have the largest sum.
+    # 1.确定状态：
+    # dp[i][j] 为前i个数可取，子数组数量为j 的解
+    # A[i - 1] 为当前待取的值
+
+    # 2.转移方程：
+    # dp[i][j] = max( dp[i - 1][j], dp[i - 1][j - 1] + A[i - 1], dp[i - 1][j] + A[i - 1] )
+    # 分别为不取当前值；前i - 1个数取j - 1 个子数组的情况下 当前值组成单独的子数组； 前i - 1个数取好了j 个数组 当前值加到最后一个子数组中
+    # 但是这里最后一种情况有一个必要条件： 前一个数必须取的情况下，当前的数才能加入到最后一个子数组。
+    # A = [-1, 4, -2，3] k = 1 的情况: dp[3][1] + A[3] = 4 + 3 = 7 但是这里是不能转化到 dp[4][1] 的
+    # 所以这里需要两个list:
+    # dp1 为取当前值的状态 ,dp2 为不取当前值的状态。
+    # dp1[i][j] = max(dp1[i - 1][j] + A[i - 1], dp1[i - 1][j - 1] + A[i - 1], dp2[i - 1][j - 1] + A[i - 1])
+    # dp2[i][j] = max(dp1[i - 1][j], dp2[i - 1][j])
+
+    # 3.初始条件和边界情况：
+    # j == 0 : dp[i][0] = 0 取0个子数组
+    # j > i : 子数组数量超过了数组长度，无解
+
+    # 4.计算顺序：
+    # top down & left to right
+
+    def maxSubArray(self, nums, k):
+        m = len(nums)
+        MIN = (1 << 31) * -1
+
+        #dp1 为取当前数的状态 dp2 为不取当前数的状态
+        #初始化
+        dp1 = [[MIN for _ in range(k + 1)] for _ in range(m + 1)]
+        dp2 = [[MIN for _ in range(k + 1)] for _ in range(m + 1)]
+
+        for i in range(m + 1):
+            dp1[i][0] = 0 # 子数组数目为0，解为0
+            dp2[i][0] = 0
+            for j in range(1, min(i + 1, k + 1)):#子数组数目不能超过i（当前可取的数的数目） 和 k 的最小值
+                dp1[i][j] = max(dp1[i - 1][j] + nums[i - 1], dp1[i - 1][j - 1] + nums[i - 1], dp2[i - 1][j - 1] + nums[i - 1])
+                #因为不能跳着取数 从dp[i - 1][j] + nums[i - 1] 转化到 dp[i][j]的必要条件是取了上一个数，所以 必须从dp1 表转换
+                #从 dp[i - 1][j - 1] + nums[i - 1] 转化则没有限制上一个数是否取
+
+                dp2[i][j] = max(dp1[i - 1][j], dp2[i - 1][j])
+                #比较上个数取和不取的情况
+
+        return max(dp1[m][k] ,dp2[m][k])
