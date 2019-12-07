@@ -241,3 +241,50 @@ class RandomizedSet(object):
 # param = obj.insert(val)
 # param = obj.remove(val)
 # param = obj.getRandom()
+
+
+########################## Merge K Sorted Interval Lists ##########################
+# Input: [
+#   [(1,3),(4,7),(6,8)],
+#   [(1,2),(9,10)]
+# ]
+# Output: [(1,3),(4,8),(9,10)]
+class Interval(object):
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+
+import heapq
+class Solution:
+    """
+    @param intervals: the given k sorted interval lists
+    @return:  the new sorted interval list
+    """
+    def mergeKSortedIntervalLists(self, intervals):
+        result = []
+        heap = []
+        for index, array in enumerate(intervals):
+            if len(array) == 0:
+                continue
+            heapq.heappush(heap, (array[0].start, array[0].end, index, 0))
+
+        while len(heap):
+            start, end, x, y = heap[0]
+            heapq.heappop(heap)
+            self.append_and_merge(result, Interval(start, end))
+            if y + 1 < len(intervals[x]):
+                heapq.heappush(heap, (intervals[x][y + 1].start, intervals[x][y + 1].end, x, y + 1))
+
+        return result
+
+    def append_and_merge(self, intervals, interval):
+        if not intervals:
+            intervals.append(interval)
+            return
+
+        last_interval = intervals[-1]
+        if last_interval.end < interval.start:
+            intervals.append(interval)
+            return
+
+        last_interval.end = max(last_interval.end, interval.end)
