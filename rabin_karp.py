@@ -48,3 +48,28 @@ index = pattern_matching("TusharRoy", "Tus")
 print("Index ", index)
 index = pattern_matching("TusharRoy", "Roa")
 print("Index ", index)
+
+class Solution:
+    def strStr2(self, source, target):
+        s, t = source, target
+        if t is None or s is None:
+            return -1
+        ns, nt = len(s), len(t)
+        if nt > ns:
+            return -1
+        base = 31
+        MOD = 10 ** 7
+        power = 31**nt % MOD
+        ht = hs = 0
+        for i in range(nt):
+            ht = (ht * base + ord(t[i])) % MOD
+            hs = (hs * base + ord(s[i])) % MOD
+        for i in range(nt, ns + 1):
+            if ht == hs and s[i - nt: i] == t:
+                return i - nt
+            if i == ns:
+                return -1
+            hs = (hs * base + ord(s[i])) % MOD
+            hs = (hs - power * ord(s[i - nt])) % MOD
+            if hs < 0:
+                hs += MOD
