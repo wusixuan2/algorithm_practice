@@ -288,3 +288,36 @@ class Solution:
             return
 
         last_interval.end = max(last_interval.end, interval.end)
+
+    #
+    def mergeKSortedIntervalLists(self, intervals):
+        data = []
+        for i in intervals:
+            data += i
+        data.sort(key= lambda t:t.start)
+        res = [data[0]]
+        for d in data:
+            if res[-1].end < d.start:
+                res += [d]
+            else:
+                res[-1].end = max(res[-1].end, d.end)
+        return res
+
+    #
+    def mergeKSortedIntervalLists(self, intervals):
+        import heapq
+        data, res, last = [], [], None
+        for l in intervals:
+            for i in l:
+                heapq.heappush(data, (i.start, i.end))
+        while data:
+            cur = heapq.heappop(data)
+            cur = Interval(cur[0], cur[1])
+            if not last or last.end < cur.start:
+                res += [cur]
+                last = cur
+            elif last.end > cur.end:
+                continue
+            else:
+                last.end = cur.end
+        return res
