@@ -49,6 +49,27 @@ print("Index ", index)
 index = pattern_matching("TusharRoy", "Roa")
 print("Index ", index)
 
+# 数据结构:
+# hash_t, hash_s: 子串哈希值, 长度 len(t)
+
+# 初始化:
+# base = 31
+# MOD = 10 ** 7
+# power = base ** len(t) % MOD
+# hash_t = hash_s = 0
+
+# 缩写 t: target, s: source
+
+# 采用字符串哈希,将字符串映射为数字，
+# hash_t = (hash_t * 26 + ord(t[i]) % MOD; 哈希函数, 字符串转化成数字.
+# 对于要匹配的子串算出一个哈希值，然后再遍历主串,
+# 循环, i 从 len(t) 开始,
+# 利用滑动窗口, 维护中间 len(t) 长度的子串的哈希值, 子串 s[i - len(t): i],
+
+# 加进低位, 滚动累乘, hash_s = hash_s * base + ord(s[i])
+# 减去高位, - power * ord(s[i - nt]
+# 如果与 target 串相同, 哈希本身不安全, 取出来 lent(t) 长度的子串再进行比较, 完全相同即可.
+# 注意, 减高位 取模, 可能得到负数, 需要加 MOD, 将负数变为正数。
 class Solution:
     def strStr2(self, source, target):
         s, t = source, target
