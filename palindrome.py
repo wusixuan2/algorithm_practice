@@ -20,13 +20,17 @@ def longestPalindromeSubseq(s):
 # longestPalindromeSubseq('bbbab')
 
 ################ 回文排列II  · Palindrome Permutation II ################
+import collections
+import itertools
 class Solution:
     """
     @param s: the given string
     @return: all the palindromic permutations (without duplicates) of it
     """
-    def generatePalindromes(self, s):
-        import collections
+    # check if palindrome exists.
+    # find the permutation of one of the haves of char
+    # for each permutation, reversed the string, and concatenate with the original one.
+    def generatePalindromes1(self, s):
         counter = collections.Counter(s)
         odds = list(filter(lambda x: x % 2, counter.values()))
         if len(odds) > 1:
@@ -42,9 +46,11 @@ class Solution:
             baseStr += char*(counter[char]//2)
         return baseStr, mid
 
+    # O(2^n) DFS backtracking.
     def backTracking(self, s, idx, mid, ans):
         if idx == len(s) - 1:
             return ans
+
         for i in range(idx, len(s)):
             if i >= 1 and s[i] == s[i-1] == s[idx]:
                 continue #no need to go deeper if swap would be the same
@@ -56,3 +62,38 @@ class Solution:
                 permu = s
             self.backTracking(permu, idx+1, mid, ans)
         return ans
+    ######
+    def generatePalindromes(self, s):
+        cnt = collections.Counter(s)
+        mid = ''.join(k for k, v in cnt.items() if v % 2)
+        chars = ''.join(k * (v // 2) for k, v in cnt.items())
+        return self.permuteUnique(mid, chars) if len(mid) < 2 else []
+
+    def permuteUnique(self, mid, nums):
+        result = []
+        used = [False] * len(nums)
+        self.permuteUniqueRecu(mid, result, used, [], nums)
+        return result
+
+    def permuteUniqueRecu(self, mid, result, used, cur, nums):
+        if len(cur) == len(nums):
+            half_palindrome = ''.join(cur)
+            result.append(half_palindrome + mid + half_palindrome[::-1])
+            return
+        for i in range(len(nums)):
+            if not used[i] and not (i > 0 and nums[i-1] == nums[i] and used[i-1]):
+                used[i] = True
+                cur.append(nums[i])
+                self.permuteUniqueRecu(mid, result, used, cur, nums)
+                cur.pop()
+                used[i] = False
+    ######
+    def generatePalindromes2(self, s):
+      cnt = collections.Counter(s)
+      mid = tuple(k for k, v in cnt.items() if v % 2)
+      chars = ''.join(k * (v // 2) for k, v in cnt.items())
+      return [''.join(half_palindrome + mid + half_palindrome[::-1]) \
+        for half_palindrome in set(itertools.permutations(chars))] if len(mid) < 2 else []
+
+sol = Solution()
+print(sol.generatePalindromes('aabbcc'))
