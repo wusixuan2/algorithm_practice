@@ -122,3 +122,24 @@ class Solution:
             left += 1
             right -= 1
         return left, right
+
+################ Palindrome Partitioning II ################
+# 可以看作序列型动态规划问题, 设定 dp[i] 表示原串的前 i 个字符最少分割多少次可以使得到的都是回文子串.
+# 如果 s 前 i 个字符组成的子串本身就是回文串, 则 dp[i] = 0, 否则:
+# dp[i] = min{dp[j] + 1} (j < i 并且 s[j + 1], s[j + 2], ... , s[i] 是回文串)
+class Solution:
+    # @param s, a string
+    # @return an integer
+    def minCut(self, s):
+        n = len(s)
+        f = []
+        p = [[False for x in range(n)] for x in range(n)]
+        #the worst case is cutting by each char
+        for i in range(n+1):
+            f.append(n - 1 - i) # the last one, f[n]=-1
+        for i in reversed(range(n)):
+            for j in range(i, n):
+                if (s[i] == s[j] and (j - i < 2 or p[i + 1][j - 1])):
+                    p[i][j] = True
+                    f[i] = min(f[i], f[j + 1] + 1)
+        return f[0]
