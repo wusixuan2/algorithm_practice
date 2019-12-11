@@ -143,3 +143,27 @@ class Solution:
                     p[i][j] = True
                     f[i] = min(f[i], f[j + 1] + 1)
         return f[0]
+
+################ Palindrome Partitioning ################
+# Return all possible palindrome partitioning of s
+class Solution:
+    # 1. 使用 append + pop 的方式
+    def partition(self, s):
+        results = []
+        self.dfs(s, [], results)
+        return results
+
+    def dfs(self, s, stringlist, results):
+        if len(s) == 0:
+            results.append(list(stringlist))
+            return
+
+        for i in range(1, len(s) + 1):
+            prefix = s[:i]
+            if self.is_palindrome(prefix):
+                stringlist.append(prefix)
+                self.dfs(s[i:], stringlist, results)
+                stringlist.pop()
+
+    def is_palindrome(self, s):
+        return s == s[::-1]
