@@ -231,3 +231,45 @@ class Solution:
             partition.append(i)
             self.dfs(s, i + 1, partition, memo, results)
             partition.pop()
+
+    # dp
+    def partition(self, s):
+        results = []
+        is_palindrome = self.get_is_palindrome(s)
+        self.dfs(s, 0, [], is_palindrome, results)
+        return results
+
+    def generate_solution(self, s, partition):
+        strings = []
+        last_index = -1
+        for i in partition:
+            strings.append(s[last_index + 1: i + 1])
+            last_index = i
+        return strings
+
+    def dfs(self, s, index, partition, is_palindrome, results):
+        if index == len(s):
+            results.append(self.generate_solution(s, partition))
+            return
+
+        for i in range(index, len(s)):
+            if not is_palindrome[index][i]:
+                continue
+            partition.append(i)
+            self.dfs(s, i + 1, partition, is_palindrome, results)
+            partition.pop()
+
+    def get_is_palindrome(self, s):
+        n = len(s)
+        is_palindrome = [[False] * n for _ in range(n)]
+        for i in range(n):
+            is_palindrome[i][i] = True
+        for i in range(n - 1):
+            is_palindrome[i][i + 1] = (s[i] == s[i + 1])
+
+        for delta in range(2, n):
+            for i in range(n - delta):
+                j = i + delta
+                is_palindrome[i][j] = is_palindrome[i + 1][j - 1] and s[i] == s[j]
+
+        return is_palindrome
