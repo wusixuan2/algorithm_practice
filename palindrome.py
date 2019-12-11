@@ -167,3 +167,29 @@ class Solution:
 
     def is_palindrome(self, s):
         return s == s[::-1]
+
+    # 2. 使用记忆化搜索来做的办法，和 word break ii 类似
+    def partition(self, s):
+        return self.dfs(s, {})
+
+    def dfs(self, s, memo):
+        if s == "":
+            return []
+        if s in memo:
+            return memo[s]
+
+        partitions = []
+        for i in range(len(s) - 1):
+            prefix = s[:i + 1]
+            if prefix != prefix[::-1]:
+                continue
+
+            sub_partitions = self.dfs(s[i + 1:], memo)
+            for p in sub_partitions:
+                partitions.append([prefix] + p)
+
+        if s == s[::-1]:
+            partitions.append([s])
+
+        memo[s] = partitions
+        return partitions
